@@ -267,6 +267,7 @@ if($ENV{ROS_VERSION} MATCHES "2")
   )
 
   install(DIRECTORY
+    config
     launch
     rviz
     DESTINATION share/${PROJECT_NAME})
