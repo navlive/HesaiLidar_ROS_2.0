@@ -253,6 +253,19 @@ if($ENV{ROS_VERSION} MATCHES "2")
     hesai_ros_driver_node
     DESTINATION lib/${PROJECT_NAME})
 
+  ## Mark libraries for installation
+  install(TARGETS
+       source_lib
+       container_lib
+       ptcClient_lib
+       ptcParser_lib
+       log_lib
+       platutils_lib
+       ARCHIVE DESTINATION lib
+       LIBRARY DESTINATION lib
+       RUNTIME DESTINATION bin
+  )
+
   install(DIRECTORY
     launch
     rviz
