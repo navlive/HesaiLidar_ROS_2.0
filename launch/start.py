@@ -8,5 +8,4 @@ def generate_launch_description():
 
     return LaunchDescription([
         Node(namespace='hesai_ros_driver', package='hesai_ros_driver', executable='hesai_ros_driver_node', output='screen'),
-        Node(namespace='rviz2', package='rviz2', executable='rviz2', arguments=['-d',rviz_config])
     ])
