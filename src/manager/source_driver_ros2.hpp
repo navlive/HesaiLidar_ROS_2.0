@@ -124,13 +124,13 @@ inline void SourceDriver::Init(const YAML::Node& config)
   if (send_point_cloud_ros) {
     std::string ros_send_point_topic;
     YamlRead<std::string>(config["ros"], "ros_send_point_cloud_topic", ros_send_point_topic, "hesai_points");
-    pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(ros_send_point_topic, 100);
+    pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(ros_send_point_topic, rclcpp::SensorDataQoS());
   }
 
   if (send_packet_ros && driver_param.input_param.source_type != DATA_FROM_ROS_PACKET) {
     std::string ros_send_packet_topic;
     YamlRead<std::string>(config["ros"], "ros_send_packet_topic", ros_send_packet_topic, "hesai_packets");
-    pkt_pub_ = node_ptr_->create_publisher<hesai_ros_driver::msg::UdpFrame>(ros_send_packet_topic, 10);
+    pkt_pub_ = node_ptr_->create_publisher<hesai_ros_driver::msg::UdpFrame>(ros_send_packet_topic, rclcpp::SensorDataQoS());
   }
 
   if (driver_param.input_param.source_type == DATA_FROM_ROS_PACKET) {
