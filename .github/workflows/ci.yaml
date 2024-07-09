@@ -25,6 +25,7 @@ jobs:
         uses: actions/checkout@v3 # clone target repository
         with:
           path: "./hesai_ros_driver"
+          submodules: "true"
       
       - uses: 'ros-industrial/industrial_ci@master' # run industrial_ci
         env: # either pass all entries explicitly
