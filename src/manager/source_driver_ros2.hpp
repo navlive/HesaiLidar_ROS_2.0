@@ -124,19 +124,22 @@ inline void SourceDriver::Init(const YAML::Node& config)
   if (send_point_cloud_ros) {
     std::string ros_send_point_topic;
     YamlRead<std::string>(config["ros"], "ros_send_point_cloud_topic", ros_send_point_topic, "hesai_points");
-    pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(ros_send_point_topic, 100);
+    rclcpp::QoS qos = rclcpp::SensorDataQoS();
+    pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(ros_send_point_topic, qos);
   }
 
   if (send_packet_ros && driver_param.input_param.source_type != DATA_FROM_ROS_PACKET) {
     std::string ros_send_packet_topic;
     YamlRead<std::string>(config["ros"], "ros_send_packet_topic", ros_send_packet_topic, "hesai_packets");
-    pkt_pub_ = node_ptr_->create_publisher<hesai_ros_driver::msg::UdpFrame>(ros_send_packet_topic, 10);
+    rclcpp::QoS qos = rclcpp::SensorDataQoS();
+    pkt_pub_ = node_ptr_->create_publisher<hesai_ros_driver::msg::UdpFrame>(ros_send_packet_topic, qos);
   }
 
   if (driver_param.input_param.source_type == DATA_FROM_ROS_PACKET) {
     std::string ros_recv_packet_topic;
     YamlRead<std::string>(config["ros"], "ros_recv_packet_topic", ros_recv_packet_topic, "hesai_packets");
-    pkt_sub_ = node_ptr_->create_subscription<hesai_ros_driver::msg::UdpFrame>(ros_recv_packet_topic, 10, 
+    rclcpp::QoS qos = rclcpp::SensorDataQoS();
+    pkt_sub_ = node_ptr_->create_subscription<hesai_ros_driver::msg::UdpFrame>(ros_recv_packet_topic, qos, 
       std::bind(&SourceDriver::RecievePacket, this, std::placeholders::_1));
     driver_param.decoder_param.enable_udp_thread = false;
     subscription_spin_thread_ = new boost::thread(boost::bind(&SourceDriver::SpinRos2,this));
