@@ -69,13 +69,13 @@ int main(int argc, char** argv)
 
   std::string config_path;
 
-#ifdef RUN_IN_ROS_WORKSPACE
-   config_path = ros::package::getPath("hesai_ros_driver");
-#else
-   config_path = (std::string)PROJECT_PATH;
-#endif
+// #ifdef RUN_IN_ROS_WORKSPACE
+//    config_path = ros::package::getPath("hesai_ros_driver");
+// #else
+//    config_path = (std::string)PROJECT_PATH;
+// #endif
 
-   config_path += "/config/config.yaml";
+  config_path = "/opt/ros/humble/share/hesai_ros_driver/config/config.yaml"; // hard coding the path for debian creation
 
 #ifdef ROS_FOUND
   ros::NodeHandle priv_hh("~");
