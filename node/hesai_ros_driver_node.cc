@@ -71,14 +71,14 @@ int main(int argc, char** argv)
   std::string config_path;
 
 #ifdef ROS_FOUND
-   config_path = ros::package::getPath("hesai_ros_driver");
+  config_path = ros::package::getPath("hesai_ros_driver");
 #elif ROS2_FOUND
-   config_path = ament_index_cpp::get_package_share_directory("hesai_ros_driver");
+  config_path = ament_index_cpp::get_package_share_directory("hesai_ros_driver");
 #else
-   config_path = (std::string)PROJECT_PATH;
+  config_path = (std::string)PROJECT_PATH;
 #endif
 
-   config_path += "/config/config.yaml";
+  config_path += "/config/config.yaml";
 
 #ifdef ROS_FOUND
   ros::NodeHandle priv_hh("~");
