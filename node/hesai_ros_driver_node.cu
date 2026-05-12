@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 
   YAML::Node config;
   config = YAML::LoadFile(config_path);
-
+  std::cout << "Config file loaded from: " << config_path << std::endl;
 
   std::shared_ptr<NodeManager> demo_ptr = std::make_shared<NodeManager>();
   demo_ptr->Init(config);
