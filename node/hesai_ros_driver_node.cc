@@ -39,6 +39,7 @@
 #include <ros/package.h>
 #elif ROS2_FOUND
 #include <rclcpp/rclcpp.hpp>
+#include <ament_index_cpp/get_package_share_directory.hpp>
 #endif
 
 #ifdef ROS2_FOUND
@@ -69,8 +70,10 @@ int main(int argc, char** argv)
 
   std::string config_path;
 
-#ifdef RUN_IN_ROS_WORKSPACE
+#ifdef ROS_FOUND
    config_path = ros::package::getPath("hesai_ros_driver");
+#elif ROS2_FOUND
+   config_path = ament_index_cpp::get_package_share_directory("hesai_ros_driver");
 #else
    config_path = (std::string)PROJECT_PATH;
 #endif
@@ -81,6 +84,14 @@ int main(int argc, char** argv)
   ros::NodeHandle priv_hh("~");
   std::string path;
   priv_hh.param("config_path", path, std::string(""));
+  if (!path.empty())
+  {
+    config_path = path;
+  }
+#elif ROS2_FOUND
+  auto param_node = rclcpp::Node::make_shared("hesai_ros_driver_param_loader");
+  param_node->declare_parameter<std::string>("config_path", "");
+  std::string path = param_node->get_parameter("config_path").as_string();
   if (!path.empty())
   {
     config_path = path;
