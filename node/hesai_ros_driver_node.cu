@@ -39,6 +39,7 @@
 #include <ros/package.h>
 #elif ROS2_FOUND
 #include <rclcpp/rclcpp.hpp>
+#include <ament_index_cpp/get_package_share_directory.hpp>
 #endif
 
 #ifdef ROS2_FOUND
@@ -69,13 +70,15 @@ int main(int argc, char** argv)
 
   std::string config_path;
 
-#ifdef RUN_IN_ROS_WORKSPACE
-   config_path = ros::package::getPath("hesai_ros_driver");
+#ifdef ROS_FOUND
+  config_path = ros::package::getPath("hesai_ros_driver");
+#elif ROS2_FOUND
+  config_path = ament_index_cpp::get_package_share_directory("hesai_ros_driver");
 #else
-   config_path = (std::string)PROJECT_PATH;
+  config_path = (std::string)PROJECT_PATH;
 #endif
 
-   config_path += "/config/config.yaml";
+  config_path += "/config/config.yaml";
 
 #ifdef ROS_FOUND
   ros::NodeHandle priv_hh("~");
@@ -85,11 +88,19 @@ int main(int argc, char** argv)
   {
     config_path = path;
   }
+#elif ROS2_FOUND
+  auto param_node = rclcpp::Node::make_shared("hesai_ros_driver_param_loader");
+  param_node->declare_parameter<std::string>("config_path", "");
+  std::string path = param_node->get_parameter("config_path").as_string();
+  if (!path.empty())
+  {
+    config_path = path;
+  }
 #endif
 
   YAML::Node config;
   config = YAML::LoadFile(config_path);
-
+  std::cout << "Config file loaded from: " << config_path << std::endl;
 
   std::shared_ptr<NodeManager> demo_ptr = std::make_shared<NodeManager>();
   demo_ptr->Init(config);
